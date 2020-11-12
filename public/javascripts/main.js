@@ -207,7 +207,7 @@ let loopCount=0;
 
 let action = ()=>{
 //First loop, using class to set possible outcomes
-let actionSet = [Melee,Spell,Run,Hide,Taunt,Observe,Item];
+let actionSet = ["Melee","Spell","Run","Hide","Taunt","Observe","Item"];
 //Keep removing possibilties until there is one left, reset if zero
 
 
@@ -222,7 +222,7 @@ if((Math.random()*100)>classes[order[i].Job][Object.keys(classes[order[i].Job])[
 
 }
  shout(actionSet.length);
- if(actionSet.length===1){return shout(actionSet.toString())}
+ if(actionSet.length===1){return shout(actionSet[0])}
  if(actionSet.length===0){action()}
 };
 
