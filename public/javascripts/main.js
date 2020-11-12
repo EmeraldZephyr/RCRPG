@@ -84,7 +84,8 @@ Wizard:{
     Observe:30,
     Item:30
 }
-}
+};
+
 //Add log to action log
 const shout = (str)=>{
 let newDiv = document.createElement("div");
@@ -94,9 +95,9 @@ document.getElementById("Log").appendChild(newDiv);
 //Make action log automatically scroll to the bottom
 let autoScroll = document.getElementById("Log");
 autoScroll.scrollTop=autoScroll.scrollHeight;
-
 };
-//Randomize stats
+
+//Roll Random Characters
 const shuffle = (set)=>{
     set.Points=15;
 
@@ -112,8 +113,6 @@ const shuffle = (set)=>{
         else{set.Job = Object.keys(classes)[1]};
         
     };
-    
-
 
 //convert JSON to string without brackets, quotes and commas
 const readyText = (string) =>{
@@ -124,7 +123,7 @@ let vD = vC.replace(/,/g,"</br>");
 return vD;
 };
 
-//Update divs to reflect new information
+//Update divs to reflect new information. **clunky**
 const refresh = () =>{
     let Extended = {
         Natural_AC:Player.Grace*10,
@@ -171,6 +170,8 @@ document.getElementById("extended").innerHTML=`Extended</br>${extendedString}`;
 document.getElementById("monster").innerHTML=`Monster</br>${monsterString}`;
 document.getElementById("monsterExtended").innerHTML=`Monster</br>${monsterExtendedString}`;
 };
+
+//Start with some randomized characters
 shuffle(Player);
 shuffle(Monster);
 refresh();
@@ -180,7 +181,6 @@ document.getElementById("randomize").addEventListener("click",()=>{
 shuffle(Player);
 shuffle(Monster);
 refresh();
-shout("click");
 });
 
 refresh();
@@ -206,18 +206,29 @@ shout(`This ${order[i].Job} will...`);
 let action = ()=>{
 //First loop, using class to set possible outcomes
 let actionSet = [Melee(order[i].Name,"Other"),Spell(order[i].Name,"Other"),Run(order[i].Name,"Other"),Hide(order[i].Name,"Other"),Taunt(order[i].Name,"Other"),Observe(order[i].Name,"Other"),Item(order[i].Name,"Other")]
-//How many possibilities, so far
-shout(Object.keys(classes[order[i].Job]).length);
+//Keep removing possibilties until there is one left, reset if zero
+
+
+let loopCount=0;
+while(actionSet.length>2){
+    //cap loops
+loopCount+=1;
+shout(loopCount);
+if(loopCount>=100){return shout("I'm Broken");}
+
 for (let o=0; o<Object.keys(classes[order[i].Job]).length; o++){
 if(Math.random()*100>classes[order[i].Job][Object.keys(classes[order[i].Job])[o]]){
-shout(Object.keys(classes[order[i].Job])[o]);
+actionSet = actionSet.splice(o,1);
 }
+
 else
-if(actionSet.length===1){return shout(`${order[i]} successfully ${actionSet[0]}`)}
+if(actionSet.length===1){return shout(`${order[i].Name} successfully ${actionSet[0]}`)}
 else
 if(actionSet.length===0){actionSet=[Melee(order[i].Name,"Other"),Spell(order[i].Name,"Other"),Run(order[i].Name,"Other"),Hide(order[i].Name,"Other"),Taunt(order[i].Name,"Other"),Observe(order[i].Name,"Other"),Item(order[i].Name,"Other")]}
 };
     
+};
+
 };
 action();
 };
