@@ -187,13 +187,13 @@ refresh();
 
 //Give actions something to do, for now.
 let actions={
-    Melee:()=>{shout(`hit`)},
-    Spell:()=>{shout('cast spell')},
-    Run:()=>{shout('run away')},
-    Hide:()=>{shout('tried to hide')},
-    Taunt:()=>{shout('tried to enrage')},
-    Observe:()=>{shout('formed a strategy')},
-    Item:()=>{shout(`Searched their sachel`)}
+    Melee:(character,target)=>{shout(`${character} attacks ${target}`)},
+    Spell:(character,target)=>{shout(`${character} reaches into the ether, finding ${target}`)},
+    Run:(character,target)=>{shout(`${character} defends against ${target}`)},
+    Hide:(character,target)=>{shout(`${character} tried to hide from ${target}`)},
+    Taunt:(character,target)=>{shout(`${character} sneers at ${target}`)},
+    Observe:(character,target)=>{shout(`${character} formed a strategy`)},
+    Item:(character,target)=>{shout(`${character} Searched their sachel`)}
 }
 
 //Fight calculations
@@ -205,23 +205,16 @@ for (i=0; i<order.length; i++){
 shout(`${order[i].Name}'s turn... `);
 shout(`This ${order[i].Job} will...`);
 //Choose action
-let loopCount=0;
-
 let action = ()=>{
 //First loop, using class to set possible outcomes
 let actionSet = ["Melee","Spell","Run","Hide","Taunt","Observe","Item"];
 //Keep removing possibilties until there is one left, reset if zero
-
-
-
-
 while(actionSet.length>1){
 for (let q=0; q<Object.keys(classes[order[i].Job]).length; q++){
 if((Math.random()*100)>classes[order[i].Job][Object.keys(classes[order[i].Job])[q]]){
     actionSet.splice(actionSet.indexOf(Object.keys(classes[order[i].Job])[q]),1);
-   
-
 }
+//Once there's only one left, run the function of that name
  if(actionSet.length===1){return actions[actionSet[0]]()}
  if(actionSet.length===0){action()}
 };
