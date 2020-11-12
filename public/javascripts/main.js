@@ -186,13 +186,15 @@ refresh();
 refresh();
 
 //Give actions something to do, for now.
-let Melee=()=>{shout(`attempted to hit`)};
-let Spell=()=>{shout(`attempted to cast a spell`)}
-let Run=()=>{shout(`tried to run`)}
-let Hide=()=>{shout(`tried to hide`)}
-let Taunt=()=>{shout(`tried to enrage`)}
-let Observe=()=>{shout(`tried to analyze`)}
-let Item=()=>{shout(`tried to use an item`)}
+let actions={
+    Melee:()=>{shout(`hit`)},
+    Spell:()=>{shout('cast spell')},
+    Run:()=>{shout('run away')},
+    Hide:()=>{shout('tried to hide')},
+    Taunt:()=>{shout('tried to enrage')},
+    Observe:()=>{shout('formed a strategy')},
+    Item:()=>{shout(`Searched their sachel`)}
+}
 
 //Fight calculations
 let fight = (fighters)=>{
@@ -216,13 +218,11 @@ let actionSet = ["Melee","Spell","Run","Hide","Taunt","Observe","Item"];
 while(actionSet.length>1){
 for (let q=0; q<Object.keys(classes[order[i].Job]).length; q++){
 if((Math.random()*100)>classes[order[i].Job][Object.keys(classes[order[i].Job])[q]]){
-    shout(`Removed ${Object.keys(classes[order[i].Job])[q]}`)
     actionSet.splice(actionSet.indexOf(Object.keys(classes[order[i].Job])[q]),1);
    
 
 }
- shout(actionSet.length);
- if(actionSet.length===1){return shout(actionSet[0])}
+ if(actionSet.length===1){return actions[actionSet[0]]()}
  if(actionSet.length===0){action()}
 };
 
