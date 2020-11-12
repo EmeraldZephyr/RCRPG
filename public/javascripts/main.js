@@ -186,13 +186,13 @@ refresh();
 refresh();
 
 //Give actions something to do, for now.
-let Melee=(character,target)=>{shout(`${character} attempted to hit ${target}`)};
-let Spell=(character,target)=>{shout(`${character} attempted to cast a spell on ${target} `)}
-let Run=(character,target)=>{shout(`${character} tried to run from ${target}`)}
-let Hide=(character,target)=>{shout(`${character} tried to hide from ${target}`)}
-let Taunt=(character,target)=>{shout(`${character} tried to enrage ${target}`)}
-let Observe=(character,target)=>{shout(`${character} tried to analyze from ${target}`)}
-let Item=(character,target)=>{shout(`${character} tried to use an item on ${target}`)}
+let Melee=()=>{shout(`attempted to hit`)};
+let Spell=()=>{shout(`attempted to cast a spell`)}
+let Run=()=>{shout(`tried to run`)}
+let Hide=()=>{shout(`tried to hide`)}
+let Taunt=()=>{shout(`tried to enrage`)}
+let Observe=()=>{shout(`tried to analyze`)}
+let Item=()=>{shout(`tried to use an item`)}
 
 //Fight calculations
 let fight = (fighters)=>{
@@ -203,30 +203,29 @@ for (i=0; i<order.length; i++){
 shout(`${order[i].Name}'s turn... `);
 shout(`This ${order[i].Job} will...`);
 //Choose action
+let loopCount=0;
+
 let action = ()=>{
 //First loop, using class to set possible outcomes
-let actionSet = [Melee(order[i].Name,"Other"),Spell(order[i].Name,"Other"),Run(order[i].Name,"Other"),Hide(order[i].Name,"Other"),Taunt(order[i].Name,"Other"),Observe(order[i].Name,"Other"),Item(order[i].Name,"Other")]
+let actionSet = [Melee,Spell,Run,Hide,Taunt,Observe,Item];
 //Keep removing possibilties until there is one left, reset if zero
 
 
-let loopCount=0;
-while(actionSet.length>2){
-    //cap loops
-loopCount+=1;
-shout(loopCount);
-if(loopCount>=100){return shout("I'm Broken");}
 
-for (let o=0; o<Object.keys(classes[order[i].Job]).length; o++){
-if(Math.random()*100>classes[order[i].Job][Object.keys(classes[order[i].Job])[o]]){
-actionSet = actionSet.splice(o,1);
+
+while(actionSet.length>1){
+for (let q=0; q<Object.keys(classes[order[i].Job]).length; q++){
+if((Math.random()*100)>classes[order[i].Job][Object.keys(classes[order[i].Job])[q]]){
+    shout(`Removed ${Object.keys(classes[order[i].Job])[q]}`)
+    actionSet.splice(actionSet.indexOf(Object.keys(classes[order[i].Job])[q]),1);
+   
+
 }
-
-else
-if(actionSet.length===1){return shout(`${order[i].Name} successfully ${actionSet[0]}`)}
-else
-if(actionSet.length===0){actionSet=[Melee(order[i].Name,"Other"),Spell(order[i].Name,"Other"),Run(order[i].Name,"Other"),Hide(order[i].Name,"Other"),Taunt(order[i].Name,"Other"),Observe(order[i].Name,"Other"),Item(order[i].Name,"Other")]}
+ shout(actionSet.length);
+ if(actionSet.length===1){return shout(actionSet.toString())}
+ if(actionSet.length===0){action()}
 };
-    
+
 };
 
 };
