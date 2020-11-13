@@ -85,7 +85,39 @@ Wizard:{
     Item:30
 }
 };
-
+const Character ={
+    Name:"",
+    Job:"",
+    Points:1,
+    Grace:1,
+    Brawn:1,
+    Memory:1,
+    Sight:1,
+    Spirit:1,
+    Touch:1,
+    Hearing:1,
+    Stamina:1,
+    Wit:1,
+    Speed:1,
+    Secondary:{
+Natural_AC:(this.Grace-this.Spirit)*10,
+Melee_Damage:this.Brawn*10,
+Initiative:(this.Speed*10)-(this.Brawn*10),
+Adaptibility:this.Memory,
+Insight:(this.Spirit*10)-(this.Wit*10),
+Ranged_Accuracy:this.Sight*10,
+Element_Focus:this.Sight,
+Sensitivity:(this.Sight+this.Touch+this.Hearing+this.Memory)*10,
+Magic_AC:(this.Spirit-this.Grace)*10,
+Magic_Range:this.Touch,
+Detect_Trap:(this.Touch-this.Speed)*10,
+Magic_Spread:(this.Hearing),
+Detect_Invisible:(this.Hearing-this.Sight)*10,
+HP:this.Stamina*10,
+Sleep_Recovery:100-(this.Stamina*10),
+Magic_Damage:this.Wit*10,
+    }
+};
 //Add log to action log
 const shout = (str)=>{
 let newDiv = document.createElement("div");
@@ -167,7 +199,7 @@ let playerString = readyText(JSON.stringify(Player));
 let extendedString = readyText(JSON.stringify(Extended));
 let monsterString = readyText(JSON.stringify(Monster));
 let monsterExtendedString = readyText(JSON.stringify(monsterExtended));
-document.getElementById("player").innerHTML=`Player</br>${playerString}`;
+document.getElementById("player").innerHTML=`${playerString}`;
 document.getElementById("extended").innerHTML=`Extended</br>${extendedString}`;
 document.getElementById("monster").innerHTML=`Monster</br>${monsterString}`;
 document.getElementById("monsterExtended").innerHTML=`Monster</br>${monsterExtendedString}`;

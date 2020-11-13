@@ -17,12 +17,20 @@ display:inline-block;
 }
 #newLog{
     display:inline-block;
-    width:40vw;
+    width:100vw;
 }
 #Log{
-    height:50vh;
-    width:48vw;
+    height:25vh;
+    width:100vw;
     overflow:scroll;
+    position:absolute;
+    bottom:0;
+    left:0;
+    opacity:50%;
+    border-style:none;
+}
+#Log::-webkit-scrollbar{
+    display:none;
 }
 #Field{
     height:43vh;
