@@ -2,7 +2,7 @@ body {
 background-color: black;
 color:white;
 }
-#player,#spells,#extended,#monster,#monsterExtended,#randomize,#fight,#Log{
+#Field,#player,#spells,#extended,#monster,#monsterExtended,#randomize,#fight,#Log{
 border-style:solid;
 border-color:grey;
 display:inline-block;
@@ -17,10 +17,24 @@ display:inline-block;
 }
 #newLog{
     display:inline-block;
-    width:100vw;
+    width:40vw;
 }
 #Log{
     height:50vh;
-    width:100vw;
+    width:48vw;
     overflow:scroll;
+}
+#Field{
+    height:43vh;
+    width:44vw;
+    position: absolute;
+    right:0;
+    bottom:0;
+    display:flex;
+    flex-wrap:wrap;
+}
+.cell{
+    border-style:solid;
+    width:10vw;
+    height:10vh;
 }

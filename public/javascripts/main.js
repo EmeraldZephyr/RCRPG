@@ -123,6 +123,8 @@ let vD = vC.replace(/,/g,"</br>");
 return vD;
 };
 
+
+
 //Update divs to reflect new information. **clunky**
 const refresh = () =>{
     let Extended = {
