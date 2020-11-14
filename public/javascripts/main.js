@@ -85,9 +85,9 @@ action=(char)=>{
     let actionSet = ["Melee","Spell","Run","Hide","Taunt","Observe","Item"];
     //Keep removing possibilties until there is one left, reset if zero
     while(actionSet.length>1){
-    for (let q=0; q<Object.keys(classes[char.Job]).length; q++){
-    if((Math.random()*100)>classes[char.Job][Object.keys(classes[char.Job])[q]]){
-        actionSet.splice(actionSet.indexOf(Object.keys(classes[char.Job])[q]),1);
+    for (let q=0; q<Object.keys(char.Job).length; q++){
+    if((Math.random()*100)>char.Job[Object.keys(char.Job)[q]]){
+        actionSet.splice(actionSet.indexOf(Object.keys(char.Job)[q]),1);
     }
     //Once there's only one left, run the function of that name
      if(actionSet.length===1){return char.actions[actionSet[0]](char.Name,"other")}
