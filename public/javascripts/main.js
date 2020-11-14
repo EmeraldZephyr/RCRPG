@@ -33,7 +33,6 @@ Wizard:{
 //Character constructor
 let Character= class{
     Name="Name";
-    Job="Fighter";
     Points=1;
     Grace=1;
     Brawn=1;
@@ -69,6 +68,16 @@ actions={
     Taunt:(character,target)=>{shout(`${character} sneers at ${target}`)},
     Observe:(character,target)=>{shout(`${character} formed a strategy`)},
     Item:(character,target)=>{shout(`${character} Searched their sachel`)}
+};
+//Customizable action percentages. Change displayed job based on ranges, eventually
+Job={
+    Melee:80,
+    Spell:5,
+    Run:5,
+    Hide:1,
+    Taunt:50,
+    Observe:10,
+    Item:10
 };
 action=(char)=>{
     shout(`${char.Name}'s Turn...`)
@@ -148,12 +157,11 @@ document.getElementById(char.id).innerHTML=`${charString}`;
 
 //Randomizer button **kinda silly, now. Needs to randomize characters in roster
 document.getElementById("randomize").addEventListener("click",()=>{
-shuffle(Player);
-shuffle(Monster);
-refresh();
+shuffle(found(1));
+refresh(found(1));
 });
 
-refresh();
+
 
 
 //Array of fighters in current battle. Needs initiative selector.
