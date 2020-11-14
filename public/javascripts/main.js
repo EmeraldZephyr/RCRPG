@@ -10,73 +10,6 @@ const shout = (str)=>{
     autoScroll.scrollTop=autoScroll.scrollHeight;
     };
     
-let Player = {
-    Name:"Player",
-    Job:"",
-    Points:15,
-    Grace:1,
-    Brawn:1,
-    Memory:1,
-    Sight:1,
-    Spirit:1,
-    Touch:1,
-    Hearing:1,
-    Stamina:1,
-    Wit:1,
-    Speed:1
-};
-let Extended = {
-Natural_AC:(Player.Grace-Player.Spirit)*10,
-Melee_Damage:Player.Brawn*10,
-Initiative:(Player.Speed*10)-(Player.Brawn*10),
-Adaptibility:Player.Memory,
-Insight:(Player.Spirit*10)-(Player.Wit*10),
-Ranged_Accuracy:Player.Sight*10,
-Element_Focus:Player.Sight,
-Sensitivity:(Player.Sight+Player.Touch+Player.Hearing+Player.Memory)*10,
-Magic_AC:(Player.Spirit-Player.Grace)*10,
-Magic_Range:Player.Touch,
-Detect_Trap:(Player.Touch-Player.Speed)*10,
-Magic_Spread:(Player.Hearing),
-Detect_Invisible:(Player.Hearing-Player.Sight)*10,
-HP:Player.Stamina*10,
-Sleep_Recovery:100-(Player.Stamina*10),
-Magic_Damage:Player.Wit*10,
-};
-let Monster = {
-    Name:"Monster",
-    Job:"",
-    Points:15,
-    Grace:1,
-    Brawn:1,
-    Memory:1,
-    Sight:1,
-    Spirit:1,
-    Touch:1,
-    Hearing:1,
-    Stamina:1,
-    Wit:1,
-    Speed:1
-};
-let monsterExtended = {
-    Natural_AC:(Monster.Grace-Monster.Spirit)*10,
-Melee_Damage:Monster.Brawn*10,
-Initiative:(Monster.Speed*10)-(Monster.Brawn*10),
-Adaptibility:Monster.Memory,
-Insight:(Monster.Spirit*10)-(Monster.Wit*10),
-Ranged_Accuracy:Monster.Sight*10,
-Element_Focus:Monster.Sight,
-Sensitivity:(Monster.Sight+Monster.Touch+Monster.Hearing+Monster.Memory)*10,
-Magic_AC:(Monster.Spirit-Monster.Grace)*10,
-Magic_Range:Monster.Touch,
-Detect_Trap:(Monster.Touch-Monster.Speed)*10,
-Magic_Spread:(Monster.Hearing),
-Detect_Invisible:(Monster.Hearing-Monster.Sight)*10,
-HP:Monster.Stamina*10,
-Sleep_Recovery:100-(Monster.Stamina*10),
-Magic_Damage:Monster.Wit*10,
-};
-
 const classes = {
 Fighter:{
     Melee:80,
@@ -175,7 +108,7 @@ newCharacter("Barb");
 //Find a character by ID
 let found= (id) => {return characterRoster.find(element => element.id===id);}
 
-//Roll Random Characters
+//Roll Random Characters **broken**
 const shuffle = (set)=>{
     set.Points=15;
 
@@ -204,57 +137,14 @@ return vD;
 
 
 //Update divs to reflect new information. **clunky**
-const refresh = () =>{
-    let Extended = {
-        Natural_AC:Player.Grace*10,
-        Melee_Damage:Player.Brawn*10,
-        Initiative:(Player.Speed*10)-(Player.Brawn*10),
-        Adaptibility:Player.Memory,
-        Empathy:(Player.Spirit*10)-(Player.Wit*10),
-        Ranged_Accuracy:Player.Sight*10,
-        Element_Focus:Player.Sight,
-        Sensitivity:(Player.Sight+Player.Touch+Player.Hearing+Player.Memory)*10,
-        Magic_AC:Player.Spirit*10,
-        Magic_Range:Player.Touch,
-        Detect_Trap:(Player.Touch-Player.Speed)*10,
-        Magic_Spread:(Player.Hearing),
-        Detect_Invisible:(Player.Hearing-Player.Sight)*10,
-        HP:Player.Stamina*10,
-        Sleep_Recovery:100-(Player.Stamina*10),
-        Magic_Damage:Player.Wit*10,
-        };
-    let monsterExtended = {
-        Natural_AC:Monster.Grace*10,
-        Melee_Damage:Monster.Brawn*10,
-        Initiative:(Monster.Speed*10)-(Monster.Brawn*10),
-        Adaptibility:Monster.Memory,
-        Empathy:(Monster.Spirit*10)-(Monster.Wit*10),
-        Ranged_Accuracy:Monster.Sight*10,
-        Element_Focus:Monster.Sight,
-        Sensitivity:(Monster.Sight+Monster.Touch+Monster.Hearing+Monster.Memory)*10,
-        Magic_AC:Monster.Spirit*10,
-        Magic_Range:Monster.Touch,
-        Detect_Trap:(Monster.Touch-Monster.Speed)*10,
-        Magic_Spread:(Monster.Hearing),
-        Detect_Invisible:(Monster.Hearing-Monster.Sight)*10,
-        HP:Monster.Stamina*10,
-        Sleep_Recovery:100-(Monster.Stamina*10),
-        Magic_Damage:Monster.Wit*10,
-            };
-let playerString = readyText(JSON.stringify(Player));
-let extendedString = readyText(JSON.stringify(Extended));
-let monsterString = readyText(JSON.stringify(Monster));
-let monsterExtendedString = readyText(JSON.stringify(monsterExtended));
-document.getElementById("player").innerHTML=`${playerString}`;
-document.getElementById("extended").innerHTML=`Extended</br>${extendedString}`;
-document.getElementById("monster").innerHTML=`Monster</br>${monsterString}`;
-document.getElementById("monsterExtended").innerHTML=`Monster</br>${monsterExtendedString}`;
+const refresh = (char) =>{
+let charString = readyText(JSON.stringify(char.Brawn));
+document.getElementById(char.id).innerHTML=`${charString}`;
 };
 
 //Start with some randomized characters
-shuffle(Player);
-shuffle(Monster);
-refresh();
+//shuffle(found(1));
+//refresh(found(1));
 
 //Randomizer button **kinda silly, now. Needs to randomize characters in roster
 document.getElementById("randomize").addEventListener("click",()=>{
