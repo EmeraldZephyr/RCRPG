@@ -1,4 +1,14 @@
 
+//Control slider
+var slider = document.getElementById("myRange");
+var output = document.getElementById("levelNum");
+output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+
 //Add log to action log
 const shout = (str)=>{
     let newDiv = document.createElement("div");
@@ -10,26 +20,6 @@ const shout = (str)=>{
     autoScroll.scrollTop=autoScroll.scrollHeight;
     };
     
-const classes = {
-Fighter:{
-    Melee:80,
-    Spell:5,
-    Run:5,
-    Hide:1,
-    Taunt:50,
-    Observe:10,
-    Item:10
-},
-Wizard:{
-    Melee:5,
-    Spell:80,
-    Run:50,
-    Hide:1,
-    Taunt:1,
-    Observe:30,
-    Item:30
-}
-};
 //Character constructor
 let Character= class{
     Name="Name";
@@ -110,10 +100,16 @@ newChar.Name=Name;
 newChar.id=idCount;
 characterRoster.push(newChar);
 };
-//Make some characters
-newCharacter("Jared");
-newCharacter("Lewis");
-newCharacter("Barb");
+//New Character Button
+document.getElementById("newCharacter").addEventListener("click",()=>{
+document.getElementById("newCharacterGUI").style.display="block";
+});
+
+//New Character GUI
+document.getElementById("exit").addEventListener("click",(e)=>{
+e.stopPropagation();
+document.getElementById("newCharacterGUI").style.display="none";
+});
 //Find a character by ID
 let found= (id) => {return characterRoster.find(element => element.id===id);}
 
@@ -156,7 +152,14 @@ document.getElementById(char.id).innerHTML=`${charString}`;
 //refresh(found(1));
 
 //Randomizer button **kinda silly, now. Needs to randomize characters in roster
+document.getElementById("roster").addEventListener("click",()=>{
+shout("click");
+});
 document.getElementById("randomize").addEventListener("click",()=>{
+    for(let i=0; i<characterRoster.length; i++){
+        shuffle(found(characterRoster[i].id));
+        refresh(found(characterRoster[i].id))
+    }
 shuffle(found(1));
 refresh(found(1));
 });
@@ -167,15 +170,11 @@ refresh(found(1));
 //Array of fighters in current battle. Needs initiative selector.
 
 let fight = (fighters)=>{
+    if(characterRoster.length>0){
     for(let i=0; i<fighters.length; i++){
         fighters[i].action(fighters[i])
     }
     };
-//Function check
-fight([found(1)]);
-//Function check
-document.getElementById("fight").addEventListener("click",()=>{fight([characterRoster[0]])});
-//Check for stat changes
-shout(found(1).Brawn);
-//REMEMBER extended stats are functions!!!
-shout(found(1).Melee_Damage());
+};
+//Fight Button
+    document.getElementById("fight").addEventListener("click",()=>{fight([characterRoster[0]])});
