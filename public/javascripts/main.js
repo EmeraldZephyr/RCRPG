@@ -1,29 +1,39 @@
+let goodsArray=["stone","food","diamond"];
+let territories=["norn","talos"];
 
-//Control slider
-var slider = document.getElementById("myRange");
-
-var output = document.getElementById("levelNum");
-output.innerHTML = slider.value; // Display the default slider value
-
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function(e) {
-    e.stopPropagation();
-  output.innerHTML = this.value;
-
-}
-var graceSlider = document.getElementById("grace");
-var graceNum = document.getElementById("graceNum");
-graceSlider.oninput=function(e){
-    e.stopPropagation();
-    this.max=
-       slider.value-brawnSlider.value
-    ;
-    output.innerHTML=this.value;
+//convert JSON to string without brackets, quotes and commas
+const readyText = (string) =>{
+let vA = string.replace(/"/g,"");
+let vB = vA.replace(/{/g,"");
+let vC = vB.replace(/}/g,"");
+let vD = vC.replace(/,/g,"</br>");
+return vD;
 };
+let creator = {
+    Level:0,
+    Grace:0,
+    Brawn:0,
+    Memory:0,
+    Sight:0,
+    Spirit:0,
+    Touchy:0,
+    Hearing:0,
+    Stamina:0,
+    Wit:0,
+    Speed:0
+};
+/* Make all of the click events for adding points
+let creatorArray = ["level","grace","brawn","memory","sight","spirit","touchy","hearing","stamina","wit","speed"]
+for (let i=0; i<creatorArray.length; i++){
+document.getElementById(`${creatorArray[i]}+Button`).addEventListener("click",()=>{
 
-
+});
+};*/
 //Add log to action log
-const shout = (str)=>{
+const shout = (str,time)=>{
+    console.log(typeof time);
+    if(typeof time==undefined){time=0;}
+    let makeNew=()=>{
     let newDiv = document.createElement("div");
     newDiv.id="newLog";
     newDiv.innerHTML=str;
@@ -32,7 +42,104 @@ const shout = (str)=>{
     let autoScroll = document.getElementById("Log");
     autoScroll.scrollTop=autoScroll.scrollHeight;
     };
-    
+    setTimeout(makeNew,time);
+};
+const economy=(shoutInterval)=>{
+shout("...Economy Report...",shoutInterval);
+let market={
+    norn:{
+        gold:2,
+goods:{
+    stone:{
+        supply:1,
+        demand:0,
+        value:0
+    },
+    food:{
+        supply:1,
+        demand:0,
+        value:0
+    },
+    diamond:{
+        supply:1,
+        demand:0,
+        value:0
+    }
+}
+},
+talos:{
+    gold:0,
+    goods:{
+        stone:{
+            supply:1,
+            demand:0,
+            value:0
+        },
+        food:{
+            supply:1,
+            demand:0,
+            value:0
+        },
+        diamond:{
+            supply:1,
+            demand:0,
+            value:0
+        }
+    }
+    }
+};
+let reqGood = (good,territoryReq,territorySupply)=>{
+market[territorySupply].goods[good].demand+=1;
+for(let i=0; i<Object.keys(market[territorySupply].goods).length; i++){
+market[territorySupply].goods[good].value=market[territorySupply].goods[good].demand/market[territorySupply].goods[good].supply;
+};
+
+shout(`***${good} reqested.*** </br>By: ${territoryReq}</br>From: ${territorySupply}`,0)
+shout(`${territorySupply} - Demand:${good}-${market[territorySupply].goods[good].demand}`,0)
+};
+let buyGood = (good,territoryReq,territorySupply)=>{
+    shout(`${territoryReq}-</br>
+Gold:${market[territoryReq].gold}</br>
+${good} Supply: ${market[territoryReq].goods[good].supply}</br>
+${territorySupply}-</br>
+Gold:${market[territorySupply].gold}</br>
+${good} Supply:${market[territorySupply].goods[good].supply}
+`);
+shout(`${territoryReq} tries to purchase a ${good} from ${territorySupply}`)
+    if(market[territorySupply].goods[good].supply>0&&market[territoryReq].gold>=market[territorySupply].goods[good].value){
+market[territorySupply].gold+=market[territorySupply].goods[good].value;
+market[territoryReq].gold-=market[territorySupply].goods[good].value;
+market[territorySupply].goods[good].supply-=1;
+market[territorySupply].goods[good].demand-=1;
+market[territoryReq].goods[good].supply+=1;
+    }
+    else if(market[territorySupply].goods[good].supply===0){
+        shout(`${territorySupply} is fresh out of ${good}. Womp Womp`)
+    }
+    else if(market[territoryReq].gold<market[territorySupply].goods[good].value){
+        shout(`${territoryReq} doesn't have enough gold for ${good}. Womp Womp.`)
+    }
+market[territorySupply].goods[good].value=market[territorySupply].goods[good].demand/market[territorySupply].goods[good].supply;
+
+shout(`${territoryReq}-</br>
+Gold:${market[territoryReq].gold}</br>
+${good} Supply: ${market[territoryReq].goods[good].supply}</br>
+${territorySupply}-</br>
+Gold:${market[territorySupply].gold}</br>
+${good} Supply:${market[territorySupply].goods[good].supply}
+`);
+
+};
+
+reqGood("stone","norn","talos");
+reqGood("stone","norn","talos");
+reqGood("stone","norn","talos");
+
+buyGood("stone","norn","talos");
+buyGood("stone","norn","talos");
+
+};
+economy(0);
 //Character constructor
 let Character= class{
     Name="Name";
@@ -117,7 +224,24 @@ characterRoster.push(newChar);
 document.getElementById("newCharacter").addEventListener("click",()=>{
 document.getElementById("newCharacterGUI").style.display="block";
 });
-
+//Economy button
+document.getElementById("economy").addEventListener("click",()=>{
+    document.getElementById("economyGUI").style.display="block";
+    });
+document.getElementById("economyGUIExit").addEventListener("click",(e)=>{
+    e.stopPropagation();
+    document.getElementById("economyGUI").style.display="none";
+        });       
+//Buy/Request Supplies
+document.getElementById("buy").addEventListener("click",(e)=>{
+e.stopPropagation();
+for(let i=0; i<goodsArray.length; i++){
+    let newDiv = document.createElement("div");
+    newDiv.id=goodsArray[i];
+    newDiv.innerHTML=goodsArray[i];
+    document.getElementById("buy").appendChild(newDiv);
+}
+});
 //New Character GUI
 document.getElementById("exit").addEventListener("click",(e)=>{
 e.stopPropagation();
@@ -143,14 +267,6 @@ const shuffle = (set)=>{
         
     };
 
-//convert JSON to string without brackets, quotes and commas
-const readyText = (string) =>{
-let vA = string.replace(/"/g,"");
-let vB = vA.replace(/{/g,"");
-let vC = vB.replace(/}/g,"");
-let vD = vC.replace(/,/g,"</br>");
-return vD;
-};
 
 
 
