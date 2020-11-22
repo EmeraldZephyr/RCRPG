@@ -1,5 +1,5 @@
 let goodsArray=["stone","food","diamond"];
-let territories=["norn","talos"];
+let territories=[];
 
 //convert JSON to string without brackets, quotes and commas
 const readyText = (string) =>{
@@ -31,7 +31,6 @@ document.getElementById(`${creatorArray[i]}+Button`).addEventListener("click",()
 };*/
 //Add log to action log
 const shout = (str,time)=>{
-    console.log(typeof time);
     if(typeof time==undefined){time=0;}
     let makeNew=()=>{
     let newDiv = document.createElement("div");
@@ -44,9 +43,8 @@ const shout = (str,time)=>{
     };
     setTimeout(makeNew,time);
 };
-const economy=(shoutInterval)=>{
-shout("...Economy Report...",shoutInterval);
-let market={
+const economy={
+market:{
     norn:{
         gold:2,
 goods:{
@@ -87,59 +85,56 @@ talos:{
         }
     }
     }
-};
-let reqGood = (good,territoryReq,territorySupply)=>{
-market[territorySupply].goods[good].demand+=1;
-for(let i=0; i<Object.keys(market[territorySupply].goods).length; i++){
-market[territorySupply].goods[good].value=market[territorySupply].goods[good].demand/market[territorySupply].goods[good].supply;
+},
+reqGood:function(good,territoryReq,territorySupply){
+economy.market[territorySupply].goods[good].demand+=1;
+for(let i=0; i<Object.keys(economy.market[territorySupply].goods).length; i++){
+economy.market[territorySupply].goods[good].value=economy.market[territorySupply].goods[good].demand/economy.market[territorySupply].goods[good].supply;
 };
 
 shout(`***${good} reqested.*** </br>By: ${territoryReq}</br>From: ${territorySupply}`,0)
-shout(`${territorySupply} - Demand:${good}-${market[territorySupply].goods[good].demand}`,0)
-};
-let buyGood = (good,territoryReq,territorySupply)=>{
+shout(`${territorySupply} - Demand:${good}-${economy.market[territorySupply].goods[good].demand}`,0)
+},
+buyGood:function(good,territoryReq,territorySupply){
     shout(`${territoryReq}-</br>
-Gold:${market[territoryReq].gold}</br>
-${good} Supply: ${market[territoryReq].goods[good].supply}</br>
+Gold:${economy.market[territoryReq].gold}</br>
+${good} Supply: ${economy.market[territoryReq].goods[good].supply}</br>
 ${territorySupply}-</br>
-Gold:${market[territorySupply].gold}</br>
-${good} Supply:${market[territorySupply].goods[good].supply}
+Gold:${economy.market[territorySupply].gold}</br>
+${good} Supply:${economy.market[territorySupply].goods[good].supply}
 `);
 shout(`${territoryReq} tries to purchase a ${good} from ${territorySupply}`)
-    if(market[territorySupply].goods[good].supply>0&&market[territoryReq].gold>=market[territorySupply].goods[good].value){
-market[territorySupply].gold+=market[territorySupply].goods[good].value;
-market[territoryReq].gold-=market[territorySupply].goods[good].value;
-market[territorySupply].goods[good].supply-=1;
-market[territorySupply].goods[good].demand-=1;
-market[territoryReq].goods[good].supply+=1;
+    if(economy.market[territorySupply].goods[good].supply>0&&economy.market[territoryReq].gold>=economy.market[territorySupply].goods[good].value&&economy.market[territorySupply].goods[good].demand>0){
+economy.market[territorySupply].gold+=economy.market[territorySupply].goods[good].value;
+economy.market[territoryReq].gold-=economy.market[territorySupply].goods[good].value;
+economy.market[territorySupply].goods[good].supply-=1;
+economy.market[territorySupply].goods[good].demand-=1;
+economy.market[territoryReq].goods[good].supply+=1;
     }
-    else if(market[territorySupply].goods[good].supply===0){
+    else if(economy.market[territorySupply].goods[good].supply===0){
         shout(`${territorySupply} is fresh out of ${good}. Womp Womp`)
     }
-    else if(market[territoryReq].gold<market[territorySupply].goods[good].value){
+    else if(economy.market[territoryReq].gold<economy.market[territorySupply].goods[good].value){
         shout(`${territoryReq} doesn't have enough gold for ${good}. Womp Womp.`)
     }
-market[territorySupply].goods[good].value=market[territorySupply].goods[good].demand/market[territorySupply].goods[good].supply;
+    else if(economy.market[territorySupply].goods[good].demand===0){
+        shout(`${territorySupply} hasn't approved any ${good} for sale. Womp Womp.`)
+    }
+economy.market[territorySupply].goods[good].value=economy.market[territorySupply].goods[good].demand/economy.market[territorySupply].goods[good].supply;
 
 shout(`${territoryReq}-</br>
-Gold:${market[territoryReq].gold}</br>
-${good} Supply: ${market[territoryReq].goods[good].supply}</br>
+Gold:${economy.market[territoryReq].gold}</br>
+${good} Supply: ${economy.market[territoryReq].goods[good].supply}</br>
 ${territorySupply}-</br>
-Gold:${market[territorySupply].gold}</br>
-${good} Supply:${market[territorySupply].goods[good].supply}
+Gold:${economy.market[territorySupply].gold}</br>
+${good} Supply:${economy.market[territorySupply].goods[good].supply}
 `);
 
-};
-
-reqGood("stone","norn","talos");
-reqGood("stone","norn","talos");
-reqGood("stone","norn","talos");
-
-buyGood("stone","norn","talos");
-buyGood("stone","norn","talos");
+},
 
 };
-economy(0);
+economy.buyGood("stone","norn","talos");
+
 //Character constructor
 let Character= class{
     Name="Name";
@@ -208,6 +203,28 @@ action=(char)=>{
     
     }
 };
+//Territory constructor
+let Territory = class{
+name="norn";
+gold=10;
+stone=10;
+diamond=10;
+food=10;
+population=1;
+size=1;
+};
+//Territory creator
+let terID=0;
+
+const newTerritory=(Name)=>{
+    let newTer=new Territory;
+    newTer.name=Name;
+    terID+=1;
+    newTer.id=terID;
+    territories.push(`${Name}`);
+}
+newTerritory("norn");
+newTerritory("talos");
 //Collects all characters made by constructor
 let characterRoster = [];
 //Each character has unique ID
@@ -235,13 +252,63 @@ document.getElementById("economyGUIExit").addEventListener("click",(e)=>{
 //Buy/Request Supplies
 document.getElementById("buy").addEventListener("click",(e)=>{
 e.stopPropagation();
+//stop multiples
+if(document.getElementById("buy").childNodes.length<2){
+
 for(let i=0; i<goodsArray.length; i++){
     let newDiv = document.createElement("div");
     newDiv.id=goodsArray[i];
     newDiv.innerHTML=goodsArray[i];
+    newDiv.addEventListener("click",(e)=>{
+        e.stopPropagation();
+        //stop multiples
+        if(newDiv.childNodes.length<2){
+        for(let p=1; p<territories.length; p++){
+        let newerDiv = document.createElement("div");
+        newerDiv.id=territories[p];
+        newerDiv.innerHTML=territories[p];
+        newerDiv.addEventListener("click",(e)=>{
+            e.stopPropagation();
+            //should call a buyGood but need to make economy an object
+            economy.buyGood(goodsArray[i],territories[0],territories[p])
+        });
+        newDiv.appendChild(newerDiv);
+        };}
+    });
     document.getElementById("buy").appendChild(newDiv);
+}}
 }
-});
+);
+document.getElementById("request").addEventListener("click",(e)=>{
+    e.stopPropagation();
+    //stop multiples
+    if(document.getElementById("request").childNodes.length<2){
+    
+    for(let i=0; i<goodsArray.length; i++){
+        let newDiv = document.createElement("div");
+        newDiv.id=goodsArray[i];
+        newDiv.innerHTML=goodsArray[i];
+        newDiv.addEventListener("click",(e)=>{
+            e.stopPropagation();
+            //stop multiples
+            if(newDiv.childNodes.length<2){
+            for(let p=1; p<territories.length; p++){
+            let newerDiv = document.createElement("div");
+            newerDiv.id=territories[p];
+            newerDiv.innerHTML=territories[p];
+            newerDiv.addEventListener("click",(e)=>{
+                e.stopPropagation();
+                //should call a requestGood but need to make economy an object
+                economy.reqGood(goodsArray[i],territories[0],territories[p])
+            });
+            newDiv.appendChild(newerDiv);
+            };}
+        });
+        document.getElementById("request").appendChild(newDiv);
+    }}
+    }
+    );
+    
 //New Character GUI
 document.getElementById("exit").addEventListener("click",(e)=>{
 e.stopPropagation();
